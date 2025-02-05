@@ -27,4 +27,3 @@ Assumptions
 • The day ends when all 40 packages have been delivered.
 
 Write up
-see c950 task 1 pdf

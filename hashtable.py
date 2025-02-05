@@ -1,88 +1,63 @@
-# This will create a hash table
-class hashT:
-    # Linear Probing hashTable constructor with optional initial capacity used to store the packages
-    # Linear Probing used to decrease number of collisions per insertion
-    def __init__(self, initial_capacity=40, c1=0, c2=1):
-        self.initial_capacity = initial_capacity
-        self.package_table = [None] * initial_capacity
-        self.bucket_status_table = ["EMPTY_SINCE_START"] * initial_capacity
+class HashTable:
+    def __init__(self, capacity=10):
+        self.map = []
+        for _ in range(capacity):
+            self.map.append([])
 
-        # Double hashing constants
-        self.c1 = c1
-        self.c2 = c2
+    # Create hash key
+    def create_hash_key(self, key):
+        return int(key) % len(self.map)
 
-    # Inserts a new item into the hashTable The key of the item will be the id_number and the value will be all the
-    # corresponding components tied to that id_number
-    def insert(self, package):
-        i = 0
-        buckets_probed = 0
-        N = len(self.package_table)
-        bucket = hash(package.id_number) % N
+    # Insert package into hash table
+    def insert(self, key, value):
+        key_hash = self.create_hash_key(key)
+        key_value = [key, value]
 
-        # Iterate through the HashTable and insert the package at the next empty bucket
-        while buckets_probed < N:
-            # Insert package in next empty bucket
-            if self.bucket_status_table[bucket] == "EMPTY_SINCE_START" or self.bucket_status_table[bucket] == "EMPTY_AFTER_REMOVAL":
-                self.package_table[bucket] = package
-                self.bucket_status_table[bucket] = "OCCUPIED"
-                return True
+        if self.map[key_hash] == None:
+            self.map[key_hash] = list([key_value])
+            return True
+        else:
+            for pair in self.map[key_hash]:
+                if pair[0] == key:
+                    pair[1] = key_value
+                    return True
+            self.map[key_hash].append(key_value)
+            return True
 
-            # No empty bucket found yet, increment i and compute next bucket's index
-            i = i + 1
-            bucket = (hash(package.id_number) + (self.c1 * i) + (self.c2 * i ** 2)) % N
+    # Update package in hash table
+    def update(self, key, value):
+        key_hash = self.create_hash_key(key)
+        if self.map[key_hash] != None:
+            for pair in self.map[key_hash]:
+                if pair[0] == key:
+                    pair[1] = value
+                    print(pair[1])
+                    return True
+        else:
+            print('There was an error with updating on key: ' + key)
 
-            # Increment number of buckets probed
-            buckets_probed = buckets_probed + 1
-
-        # Iterated through the entire HashTable and could not insert the item, resize HashTable and re-insert
-        self.resize()
-        self.insert(package)
-        return True
-
-    # Searches for an item with a matching key in the hashTable. Returns the
-    # item if found, or None if not found.
-    def lookup(self, key):
-        i = 0
-        buckets_probed = 0
-        N = len(self.package_table)
-        bucket = hash(key) % N
-
-        while (self.bucket_status_table[bucket] != "EMPTY_SINCE_START") and (buckets_probed < N):
-            if (self.package_table[bucket] is not None) and (self.package_table[bucket].id_number == key):
-                return self.package_table[bucket]
-
-            # Increment i and recompute bucket index
-            i = i + 1
-            bucket = (hash(key) + self.c1 * i + self.c2 * i ** 2) % N
-
-            # Increment number of buckets probed
-            buckets_probed = buckets_probed + 1
-
+    # Get a value from hash table
+    def get_value(self, key):
+        key_hash = self.create_hash_key(key)
+        if self.map[key_hash] != None:
+            for pair in self.map[key_hash]:
+                if pair[0] == key:
+                    return pair[1]
         return None
 
+    # Delete a value from hash table
+    def delete(self, key):
+        key_hash = self.create_hash_key(key)
 
-    # Resizes hashTable, doubles original size
-    def resize(self):
-        # Create hashTable with double the initial capacity
-        resized_ht = hashT(initial_capacity=self.initial_capacity * 2, c1 = self.c1, c2 = self.c2)
+        if self.map[key_hash] == None:
+            return False
+        for i in range(0, len(self.map[key_hash])):
+            if self.map[key_hash][i][0] == key:
+                self.map[key_hash].pop(i)
+                return True
+        return False
 
-        # Iterate through the current hashTable copy packages to the new HashTable
-        for package in self.package_table:
-            resized_ht.insert(package)
-
-        self.initial_capacity = resized_ht.initial_capacity
-        self.package_table = resized_ht.package_table
-        self.bucket_status_table = resized_ht.bucket_status_table
-
-
-    # Overloaded print function
-    def __str__(self):
-        s = "   --------\n"
-        index = 0
-        for item in self.package_table:
-            value = str(item)
-            if item is None: value = 'E'
-            s += '{:2}:|{:^6}|\n'.format(index, value)
-            index += 1
-        s += "   --------"
-        return s
+class HashTableEntry:
+    def __init__(self, key, item):
+        self.key = key
+        self.item = item

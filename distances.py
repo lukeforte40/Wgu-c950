@@ -2,16 +2,16 @@ import csv
 import datetime
 
 # Read CSV files
-with open('./data/distance_data.csv') as csvfile_1:
+with open('./csvData/distance_data.csv') as csvfile_1:
     distance_csv = list(csv.reader(csvfile_1, delimiter=','))
-with open('./data/distance_name_data.csv') as csvfile_2:
+with open('./csvData/distance_name_data.csv') as csvfile_2:
     distance_name_csv = list(csv.reader(csvfile_2, delimiter=','))
 
-    # Get package address data -> O(n)
+    # Get package address data
     def get_address():
         return distance_name_csv
 
-    # Calc the total distance from row/column values -> O(1)
+    # Calculate the total distance from row/column values
     def get_distance(row, col, total):
         distance = distance_csv[row][col]
         if distance == '':
@@ -19,7 +19,7 @@ with open('./data/distance_name_data.csv') as csvfile_2:
 
         return total + float(distance)
 
-    # Calc the current distance from row/column values -> O(1)
+    # Calculate the current distance from row/column values
     def get_current_distance(row, col):
         distance = distance_csv[row][col]
         if distance == '':
@@ -27,7 +27,7 @@ with open('./data/distance_name_data.csv') as csvfile_2:
 
         return float(distance)
 
-    # Calc total distance for a given truck -> O(n)
+    # Calculate total distance for a given truck
     def get_time(distance, truck_list):
         new_time = distance / 18
         distance_in_minutes = '{0:02.0f}:{1:02.0f}'.format(
@@ -89,7 +89,7 @@ with open('./data/distance_name_data.csv') as csvfile_2:
     second_truck_indices.insert(0, '0')
     third_truck_indices.insert(0, '0')
 
-    #helper functions to return a desired value -> O(1)
+    # The following are all helper functions to return a desired value
     def first_truck_index():
         return first_truck_indices
 

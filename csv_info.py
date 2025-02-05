@@ -1,16 +1,16 @@
 import csv
-from hashtable import hashT
+from hashtable import HashTable
 
 # Read CSV files
-with open('./data/input_data.csv') as csvfile:
+with open('./csvData/input_data.csv') as csvfile:
     read_csv = csv.reader(csvfile, delimiter=',')
 
-    hash_map = hashT()  # Create an instance of HashTable class
-    first_delivery = []  # 1st truck delivery
-    second_delivery = [] # 2nd truck delivery
-    last_delivery = [] # last truck delivery
+    hash_map = HashTable()  # Create an instance of HashTable class
+    first_delivery = []  # first truck delivery
+    second_delivery = [] # second truck delivery
+    final_delivery = [] # final truck delivery
 
-    # Insert values from csv file into key/value pairs of the hash table -> O(n)
+    # Insert values from csv file into key/value pairs of the hash table
     for row in read_csv:
         id = row[0]
         address = row[1]
@@ -32,7 +32,7 @@ with open('./data/input_data.csv') as csvfile:
 
         # Correct incorrect package details
         if '84104' in value[5] and '10:30' not in value[6]:
-            last_delivery.append(value)
+            final_delivery.append(value)
 
         # First truck's first delivery
         if value[6] != 'EOD':
@@ -44,24 +44,24 @@ with open('./data/input_data.csv') as csvfile:
             second_delivery.append(value)
         
         # Check remaining packages
-        if value not in first_delivery and value not in second_delivery and value not in last_delivery:
-            second_delivery.append(value) if len(second_delivery) < len(last_delivery) else last_delivery.append(value)
+        if value not in first_delivery and value not in second_delivery and value not in final_delivery:
+            second_delivery.append(value) if len(second_delivery) < len(final_delivery) else final_delivery.append(value)
 
         # Insert value into the hash table
         hash_map.insert(id, value)
 
-    # Get packages on the first delivery -> O(1)
+    # Get packages on the first delivery
     def get_first_delivery():
         return first_delivery
 
-    # Get packages on the second delivery -> O(1)
+    # Get packages on the second delivery
     def get_second_delivery():
         return second_delivery
 
-    # Get packages on the final delivery -> O(1)
+    # Get packages on the final delivery
     def get_final_delivery():
-        return last_delivery
+        return final_delivery
 
-    # Get full list of packages -> O(1)
-    def get_hashT():
-        return hashT
+    # Get full list of packages
+    def get_hash_map():
+        return hash_map

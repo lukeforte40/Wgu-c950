@@ -1,37 +1,37 @@
 #010398679
 
-from csv_info import get_hashT
-from package import total_distance
+from csv_info import get_hash_map
+from package import total_distances
 import datetime
 
 
 class Main:
     # This is the display message that is shown when the user runs the program. The interface is accessible from here
     print('------------------------------')
-    print('WGUPS Routing Program')
+    print('WGUPS Routing Program!')
     print('------------------------------\n')
-    print(f'Route was completed in {total_distance():.2f} miles.\n')
+    print(f'Route was completed in {total_distances():.2f} miles.\n')
 
     user_input = input("""
 Please select an option below to begin or type 'quit' to quit:
-    1. Get info for all packages at specific time
-    2. Get info for a single package at specific time
+    1. Get info for all packages at a particular time
+    2. Get info for a single package at a particular time
 """)
 
-    while user_input is not 'quit':
+    while user_input != 'quit':
         # Case if user selects Option #1
-        # Get info for all packages at a particular time -> O(n)
+        # Get info for all packages at a particular time
         if user_input == '1':
             try:
                 input_time = input('Enter a time (HH:MM:SS): ')
                 (hrs, mins, secs) = input_time.split(':')
                 convert_user_time = datetime.timedelta(hours=int(hrs), minutes=int(mins), seconds=int(secs))
 
-                # Complexity ->  O(n^2)
+                # Complexity
                 for count in range(1,41):
                     try:
-                        first_time = get_hashT().get_value(str(count))[9]
-                        second_time = get_hashT().get_value(str(count))[10]
+                        first_time = get_hash_map().get_value(str(count))[9]
+                        second_time = get_hash_map().get_value(str(count))[10]
                         (hrs, mins, secs) = first_time.split(':')
                         convert_first_time = datetime.timedelta(hours=int(hrs), minutes=int(mins), seconds=int(secs))
                         (hrs, mins, secs) = second_time.split(':')
@@ -41,36 +41,36 @@ Please select an option below to begin or type 'quit' to quit:
                     
                     # Determine which packages have left the hub
                     if convert_first_time >= convert_user_time:
-                        get_hashT().get_value(str(count))[10] = 'At Hub'
-                        get_hashT().get_value(str(count))[9] = 'Leaves at ' + first_time
+                        get_hash_map().get_value(str(count))[10] = 'At Hub'
+                        get_hash_map().get_value(str(count))[9] = 'Leaves at ' + first_time
 
                         # Print package's current info
                         print(
-                            f'Package ID: {get_hashT().get_value(str(count))[0]}, '
-                            f'Delivery status: {get_hashT().get_value(str(count))[10]}'
+                            f'Package ID: {get_hash_map().get_value(str(count))[0]}, '
+                            f'Delivery status: {get_hash_map().get_value(str(count))[10]}'
                         )
 
                     # Determine which packages have left but have not been delivered
                     elif convert_first_time <= convert_user_time:
                         if convert_user_time < convert_second_time:
-                            get_hashT().get_value(str(count))[10] = 'In transit'
-                            get_hashT().get_value(str(count))[9] = 'Left at ' + first_time
+                            get_hash_map().get_value(str(count))[10] = 'In transit'
+                            get_hash_map().get_value(str(count))[9] = 'Left at ' + first_time
 
                             # Print package's current info
                             print(
-                                f'Package ID: {get_hashT().get_value(str(count))[0]}, '
-                                f'Delivery status: {get_hashT().get_value(str(count))[10]}'
+                                f'Package ID: {get_hash_map().get_value(str(count))[0]}, '
+                                f'Delivery status: {get_hash_map().get_value(str(count))[10]}'
                             )
 
                         # Determine which packages have already been delivered
                         else:
-                            get_hashT().get_value(str(count))[10] = 'Delivered at ' + second_time
-                            get_hashT().get_value(str(count))[9] = 'Left at ' + first_time
+                            get_hash_map().get_value(str(count))[10] = 'Delivered at ' + second_time
+                            get_hash_map().get_value(str(count))[9] = 'Left at ' + first_time
 
                             # Print package's current info
                             print(
-                                f'Package ID: {get_hashT().get_value(str(count))[0]}, '
-                                f'Delivery status: {get_hashT().get_value(str(count))[10]}'
+                                f'Package ID: {get_hash_map().get_value(str(count))[0]}, '
+                                f'Delivery status: {get_hash_map().get_value(str(count))[10]}'
                             )
             except IndexError:
                 print(IndexError)
@@ -80,12 +80,12 @@ Please select an option below to begin or type 'quit' to quit:
                 exit()
     
         # Case if user selects Option #2
-        # Get info for a single package at a particular time -> O(n)
+        # Get info for a single package at a particular time
         elif user_input == '2':
             try:
                 count = input('Enter a valid package ID: ')
-                first_time = get_hashT().get_value(str(count))[9]
-                second_time = get_hashT().get_value(str(count))[10]
+                first_time = get_hash_map().get_value(str(count))[9]
+                second_time = get_hash_map().get_value(str(count))[10]
                 input_time = input('Enter a time (HH:MM:SS): ')
                 (hrs, mins, secs) = input_time.split(':')
                 convert_user_time = datetime.timedelta(hours=int(hrs), minutes=int(mins), seconds=int(secs))
@@ -97,48 +97,48 @@ Please select an option below to begin or type 'quit' to quit:
                 # Determine which packages have left the hub
                 if convert_first_time >= convert_user_time:
 
-                    get_hashT().get_value(str(count))[10] = 'At Hub'
-                    get_hashT().get_value(str(count))[9] = 'Leaves at ' + first_time
+                    get_hash_map().get_value(str(count))[10] = 'At Hub'
+                    get_hash_map().get_value(str(count))[9] = 'Leaves at ' + first_time
                     
                     # Print package's current info
                     print(
-                        f'Package ID: {get_hashT().get_value(str(count))[0]}\n'
-                        f'Street address: {get_hashT().get_value(str(count))[2]}\n'
-                        f'Required delivery time: {get_hashT().get_value(str(count))[6]}\n'
-                        f'Package weight: {get_hashT().get_value(str(count))[7]}\n'
-                        f'Truck status: {get_hashT().get_value(str(count))[9]}\n'
-                        f'Delivery status: {get_hashT().get_value(str(count))[10]}\n'
+                        f'Package ID: {get_hash_map().get_value(str(count))[0]}\n'
+                        f'Street address: {get_hash_map().get_value(str(count))[2]}\n'
+                        f'Required delivery time: {get_hash_map().get_value(str(count))[6]}\n'
+                        f'Package weight: {get_hash_map().get_value(str(count))[7]}\n'
+                        f'Truck status: {get_hash_map().get_value(str(count))[9]}\n'
+                        f'Delivery status: {get_hash_map().get_value(str(count))[10]}\n'
                     )
 
                 # Determine which packages have left but have not been delivered
                 elif convert_first_time <= convert_user_time:
                     if convert_user_time < convert_second_time:
-                        get_hashT().get_value(str(count))[10] = 'In transit'
-                        get_hashT().get_value(str(count))[9] = 'Left at ' + first_time
+                        get_hash_map().get_value(str(count))[10] = 'In transit'
+                        get_hash_map().get_value(str(count))[9] = 'Left at ' + first_time
 
                         # Print package's current info
                         print(
-                            f'Package ID: {get_hashT().get_value(str(count))[0]}\n'
-                            f'Street address: {get_hashT().get_value(str(count))[2]}\n'
-                            f'Required delivery time: {get_hashT().get_value(str(count))[6]}\n'
-                            f'Package weight: {get_hashT().get_value(str(count))[7]}\n'
-                            f'Truck status: {get_hashT().get_value(str(count))[9]}\n'
-                            f'Delivery status: {get_hashT().get_value(str(count))[10]}\n'
+                            f'Package ID: {get_hash_map().get_value(str(count))[0]}\n'
+                            f'Street address: {get_hash_map().get_value(str(count))[2]}\n'
+                            f'Required delivery time: {get_hash_map().get_value(str(count))[6]}\n'
+                            f'Package weight: {get_hash_map().get_value(str(count))[7]}\n'
+                            f'Truck status: {get_hash_map().get_value(str(count))[9]}\n'
+                            f'Delivery status: {get_hash_map().get_value(str(count))[10]}\n'
                         )
 
                     # Determine which packages have already been delivered
                     else:
-                        get_hashT().get_value(str(count))[10] = 'Delivered at ' + second_time
-                        get_hashT().get_value(str(count))[9] = 'Left at ' + first_time
+                        get_hash_map().get_value(str(count))[10] = 'Delivered at ' + second_time
+                        get_hash_map().get_value(str(count))[9] = 'Left at ' + first_time
 
                         # Print package's current info
                         print(
-                            f'Package ID: {get_hashT().get_value(str(count))[0]}\n'
-                            f'Street address: {get_hashT().get_value(str(count))[2]}\n'
-                            f'Required delivery time: {get_hashT().get_value(str(count))[6]}\n'
-                            f'Package weight: {get_hashT().get_value(str(count))[7]}\n'
-                            f'Truck status: {get_hashT().get_value(str(count))[9]}\n'
-                            f'Delivery status: {get_hashT().get_value(str(count))[10]}\n'
+                            f'Package ID: {get_hash_map().get_value(str(count))[0]}\n'
+                            f'Street address: {get_hash_map().get_value(str(count))[2]}\n'
+                            f'Required delivery time: {get_hash_map().get_value(str(count))[6]}\n'
+                            f'Package weight: {get_hash_map().get_value(str(count))[7]}\n'
+                            f'Truck status: {get_hash_map().get_value(str(count))[9]}\n'
+                            f'Delivery status: {get_hash_map().get_value(str(count))[10]}\n'
                         )
 
             except ValueError:
